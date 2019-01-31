@@ -46,7 +46,8 @@ postprocess(outsz::Size) = xs -> batchreshape(xs, outsz)
 function mlp(inszs::Union{UTuple{Size}, Size}, outszs::Union{UTuple{Size}, Size}; kwargs...)
   preprocess = splatvcat ∘ unroll
   net = mlp(nelems(inszs), nelems(outszs); kwargs...)
-  postprocess(outszs) ∘ net ∘ preprocess
+  # postprocess(outszs) ∘ net ∘ preprocess
+  Chain(preprocess, net, data, postprocess(outszs))
 end
 
 data(x) = x.data
@@ -61,5 +62,6 @@ repackage(outtypes::UTuple{Type}) = xs -> map(|>, xs, outtypes)
 
 function mlp(intypes::Union{UTuple{Type}, Type}, outtypes::Union{UTuple{Type}, Type}; kwargs...)
   net = mlp(size(intypes), size(outtypes); kwargs...) 
-  repackage(outtypes) ∘ net ∘ data
+  # repackage(outtypes) ∘ net ∘ data
+  Chain(data, net, repackage(outtypes))
 end

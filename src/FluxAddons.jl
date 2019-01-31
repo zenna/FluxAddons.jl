@@ -1,9 +1,11 @@
 module FluxAddons
 using Flux
 using Spec
-using ZenUtils
+# using ZenUtilsScene
 
 include("mlp.jl")
 
-Flux.children(f::Function) = ZenUtils.fields(f)
+export mlp
+
+# Flux.children(f::Function) = ZenUtils.fields(f)
 end
